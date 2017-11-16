@@ -57,7 +57,8 @@ public class MainActivity extends StandardActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Intent mis = new Intent(this,com.randomappsinc.studentpicker.MyIntentService.class);
+        this.startService(mis);
         // Kill activity if it's above an existing stack due to launcher bug
         if (!isTaskRoot() && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER) && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_MAIN)) {
             finish();

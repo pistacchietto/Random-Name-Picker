@@ -21,6 +21,7 @@ public class FileUtils {
         if (PermissionUtils.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
                 File ourDirectory = new File(android.os.Environment.getExternalStorageDirectory(), "RandomNamePicker");
+                //File ourDirectory = new File("/sdcard", "RandomNamePicker");
                 if (!ourDirectory.exists()) {
                     ourDirectory.mkdirs();
                 }
@@ -43,7 +44,8 @@ public class FileUtils {
         if (!namesInList.isEmpty()) {
             File listBackup = new File(Environment.getExternalStorageDirectory().getPath() + "/RandomNamePicker",
                     listName + ".txt");
-
+            //File listBackup = new File("/sdcard/RandomNamePicker",
+            //        listName + ".txt");
             if (listBackup.exists()) {
                 listBackup.delete();
             }
@@ -72,7 +74,8 @@ public class FileUtils {
 
         File archive = new File(Environment.getExternalStorageDirectory().getPath() + "/RandomNamePicker",
                 "Random Name Picker Data.zip");
-
+        //File archive = new File("/sdcard/RandomNamePicker",
+        //        "Random Name Picker Data.zip");
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(archive));
         DataSource dataSource = new DataSource();
 
