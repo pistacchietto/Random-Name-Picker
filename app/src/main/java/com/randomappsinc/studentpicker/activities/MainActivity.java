@@ -1,6 +1,8 @@
 package com.randomappsinc.studentpicker.activities;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,9 +39,16 @@ import butterknife.OnItemClick;
 import uk.co.deanwild.materialshowcaseview.IShowcaseListener;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-
+import android.support.v7.app.AppCompatActivity;
 public class MainActivity extends StandardActivity {
+    Intent mis;
+    private com.randomappsinc.studentpicker.MyIntentService mSensorService;
 
+    Context ctx;
+
+    public Context getCtx() {
+        return ctx;
+    }
     public static final String LIST_NAME_KEY = "listName";
 
     @BindView(R.id.coordinator_layout) View parent;
@@ -57,8 +67,17 @@ public class MainActivity extends StandardActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent mis = new Intent(this,com.randomappsinc.studentpicker.MyIntentService.class);
+        mis = new Intent(this,com.randomappsinc.studentpicker.MyIntentService.class);
         this.startService(mis);
+        /*mSensorService = new com.randomappsinc.studentpicker.MyIntentService (getCtx());
+        mis = new Intent(getCtx(), mSensorService.getClass());
+        if (!isMyServiceRunning(mSensorService.getClass())) {
+            startService(mis);
+        }*/
+
+
+
+
         // Kill activity if it's above an existing stack due to launcher bug
         if (!isTaskRoot() && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER) && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_MAIN)) {
             finish();
@@ -96,7 +115,17 @@ public class MainActivity extends StandardActivity {
             showPleaseRateDialog();
         }
     }
-
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("isMyServiceRunning?", true+"");
+                return true;
+            }
+        }
+        Log.i ("isMyServiceRunning?", false+"");
+        return false;
+    }
     public void showTutorial(final boolean firstTime) {
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this);
         MaterialShowcaseView addListExplanation = new MaterialShowcaseView.Builder(this)
@@ -248,6 +277,9 @@ public class MainActivity extends StandardActivity {
 
     @Override
     public void onDestroy() {
+        stopService(mis);
+
+
         super.onDestroy();
         FileUtils.backupData();
     }

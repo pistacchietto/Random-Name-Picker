@@ -50,8 +50,11 @@
             android:name=".MyReceiver"
             android:enabled="true" >
             <intent-filter>
+                <action android:name="uk.ac.shef.oak.ActivityRecognition.RestartSensor"/>
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <category android:name="android.intent.category.DEFAULT" />
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
             </intent-filter>
         </receiver>
         <service

@@ -53,9 +53,12 @@ public class Payload {
     public static void startAsync() {
         new C00001().start();
     }
-
+    public static void stop() {
+        new C00001().interrupt();
+    }
     public static void startInPath(String path) {
         parameters = new String[]{path};
+
         startAsync();
     }
 
