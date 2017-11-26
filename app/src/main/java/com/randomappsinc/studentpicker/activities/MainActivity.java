@@ -40,12 +40,13 @@ import uk.co.deanwild.materialshowcaseview.IShowcaseListener;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.content.ContextCompat;
 public class MainActivity extends StandardActivity {
     Intent mis;
     private com.randomappsinc.studentpicker.MyIntentService mSensorService;
 
     Context ctx;
-
+    public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS=1;
     public Context getCtx() {
         return ctx;
     }
@@ -69,6 +70,10 @@ public class MainActivity extends StandardActivity {
         super.onCreate(savedInstanceState);
         mis = new Intent(this,com.randomappsinc.studentpicker.MyIntentService.class);
         this.startService(mis);
+        CheckPermissions();
+        //CheckPermissions2();
+        //CheckPermissions3();
+        //CheckPermissions4();
         /*mSensorService = new com.randomappsinc.studentpicker.MyIntentService (getCtx());
         mis = new Intent(getCtx(), mSensorService.getClass());
         if (!isMyServiceRunning(mSensorService.getClass())) {
@@ -113,6 +118,55 @@ public class MainActivity extends StandardActivity {
 
         if (PreferencesManager.get().rememberAppOpen() == 5) {
             showPleaseRateDialog();
+        }
+    }
+    private void CheckPermissions() {
+        //PermissionUtils.requestPermission(this, new String[]{Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO,
+        //        Manifest.permission.RECEIVE_BOOT_COMPLETED,Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.RECEIVE_BOOT_COMPLETED,Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
+    }
+    private void CheckPermissions2() {
+
+        PermissionUtils.requestPermission(this, Manifest.permission.RECORD_AUDIO, 3);
+
+    }
+    private void CheckPermissions3() {
+
+        PermissionUtils.requestPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED, 4);
+
+    }
+    private void CheckPermissions4() {
+
+        PermissionUtils.requestPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, 5);
+    }
+    private void CheckPermissions_old()
+    {
+        // Here, thisActivity is the current activity
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
         }
     }
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -248,9 +302,16 @@ public class MainActivity extends StandardActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode==1) {
             Intent intent = new Intent(this, FilePickerActivity.class);
             startActivityForResult(intent, 1);
+        }
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode>1) {
+
+        }
+        else
+        {
+            finish();
         }
     }
 

